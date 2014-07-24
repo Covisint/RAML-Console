@@ -1,5 +1,3 @@
-
-
 RAML.Inspector = (function() {
   'use strict';
 
@@ -2528,12 +2526,13 @@ RAML.Inspector = (function() {
   };
 })();
 
+
 (function() {
   'use strict';
 
   RAML.Directives.ramlConsoleInitializer = function(ramlParserWrapper) {
-    var controller = function($scope) {
-      $scope.consoleLoader = this;
+      var controller = function ($scope) {
+        $scope.consoleLoader = this;
     };
 
     controller.prototype.load = function() {
@@ -2546,12 +2545,11 @@ RAML.Inspector = (function() {
       this.finished = true;
     };
 
-    var link = function($scope, $element, $attrs, controller) {
+    var link = function ($scope, $element, $attrs, controller) {
       if (document.location.search.indexOf('?raml=') !== -1) {
         controller.location = document.location.search.replace('?raml=', '');
         controller.load();
       }
-	  console.log('check');
     };
 
     return { restrict: 'E', controller: controller, link: link };
@@ -2746,7 +2744,6 @@ RAML.Inspector = (function() {
 })();
 
 'use strict';
-
 (function() {
   RAML.Directives.repeatableAdd = function() {
     return {
@@ -3248,6 +3245,7 @@ RAML.Filters = {};
 (function() {
   var module = angular.module('ramlConsoleApp', ['raml', 'ngSanitize', 'fileInputOverride']);
 
+
   module.directive('apiResources', RAML.Directives.apiResources);
   module.directive('basicAuth', RAML.Directives.basicAuth);
   module.directive('bodyContent', RAML.Directives.bodyContent);
@@ -3441,13 +3439,13 @@ angular.module('ramlConsoleApp').run(['$templateCache', function($templateCache)
     "      <responses></responses>\n" +
     "    </console-tab>\n" +
     "\n" +
-    "    <console-tab role=\"try-it\" heading=\"Try It\" active=\"documentation.tryItActive\" disabled=\"!ramlConsole.tryItEnabled()\">\n" +
+    /*"    <console-tab role=\"try-it\" heading=\"Try It\" active=\"documentation.tryItActive\" disabled=\"!ramlConsole.tryItEnabled()\">\n" +
     "      <try-it></try-it>\n" +
     "    </console-tab>\n" +
-    "  </console-tabset>\n" +
+    "  </console-tabset>\n" + */
     "</section>\n"
   );
-
+    //Commented out the Try it button above since it is not implemented in application
 
   $templateCache.put('views/enum.tmpl.html',
     "<div class=\"autocomplete\">\n" +
@@ -3901,13 +3899,3 @@ angular.module('ramlConsoleApp').run(['$templateCache', function($templateCache)
   );
 
 }]);
-
-
-(function () {
-	angular.module('HDFS_request', []).run([
-		function(){
-			console.log("HDFS_request!");
-		}
-	]);
-  ;
-}());

@@ -45,8 +45,46 @@
 *
 */
 
-(function() {
+//Added function: getFileName() to fetch query string parameters and send hadoop request to get file
+//query string parameters function
+//only thing in console.html will be to click the button on page load
+//global variable for file fetch
 
+var HDFS_URL;
+(function () {
+    //added function to get filename from URL
+    function getFileName () {
+        //URL for HDFS request needs to be in the form: "http://ipAddress:port/HDFS/fileName"
+        var portHDFS = ":3000/HDFS/";
+
+        //get full URL from document
+        var fullUrl = document.URL;
+        //console.log(fullUrl);
+        var ipAddr = fullUrl.split('http://');
+        //console.log("IP ADDRESS: " + ipAddr[1]);
+        var slash = ipAddr[1].indexOf('/');
+        ipAddr[1] = ipAddr[1].substring(0, slash);
+        //console.log("Actual ip address: " + ipAddr[1]);
+        var queryIndex = fullUrl.indexOf('?');
+        var url = fullUrl.substring(0, queryIndex);
+        //console.log("URL: " + url);
+
+        //get and split query string parameters from url
+        var query = window.location.search.substring(1);
+        var split = query.split('=');
+        var fileName = split[1];
+        console.log("filename: " + fileName);
+
+        //full HDFS request path
+        HDFS_URL = "http://" + ipAddr[1] + portHDFS + fileName;
+        console.log("FULL PATH: " + HDFS_URL);
+
+        var object = document.getElementById('raml_location');
+        object.value = HDFS_URL;
+        document.getElementById('raml_location').focus();
+        return HDFS_URL;
+    }//end function
+    getFileName();
 function createShiftArr(step) {
 
 	var space = '    ';
@@ -9170,11 +9208,13 @@ function $IntervalProvider() {
       * </example>
       */
     function interval(fn, delay, count, invokeApply) {
-      var setInterval = $window.setInterval,
-          clearInterval = $window.clearInterval,
-          deferred = $q.defer(),
-          promise = deferred.promise,
-          iteration = 0,
+        var setInterval = $window.setInterval,
+            clearInterval = $window.clearInterval,
+            deferred = $q.defer(),
+            promise = deferred.promise,
+            iteration = 0,
+            //change invoke apply to false
+            //invokeApply = false;
           skipApply = (isDefined(invokeApply) && !invokeApply);
 
       count = isDefined(count) ? count : 0;
@@ -14363,8 +14403,8 @@ function $TimeoutProvider() {
       *
       */
     function timeout(fn, delay, invokeApply) {
-      var deferred = $q.defer(),
-          promise = deferred.promise,
+        var deferred = $q.defer(),
+            promise = deferred.promise,
           skipApply = (isDefined(invokeApply) && !invokeApply),
           timeoutId;
 
@@ -16129,8 +16169,8 @@ function FormController(element, attrs, $scope, $animate) {
 
   // init state
   form.$name = attrs.name || attrs.ngForm;
-  form.$dirty = false;
-  form.$pristine = true;
+  form.$dirty = true;
+  form.$pristine = false;
   form.$valid = true;
   form.$invalid = false;
 
@@ -17364,7 +17404,7 @@ var inputDirective = ['$browser', '$sniffer', function($browser, $sniffer) {
 
 var VALID_CLASS = 'ng-valid',
     INVALID_CLASS = 'ng-invalid',
-    //PRISTINE_CLASS = 'ng-pristine',
+    PRISTINE_CLASS = 'ng-pristine',
     DIRTY_CLASS = 'ng-dirty';
 
 /**
@@ -17508,8 +17548,8 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
   this.$parsers = [];
   this.$formatters = [];
   this.$viewChangeListeners = [];
-  this.$pristine = true;
-  this.$dirty = false;
+  this.$pristine = false;
+  this.$dirty = true;
   this.$valid = true;
   this.$invalid = false;
   this.$name = $attr.name;
@@ -32554,8 +32594,11 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
       } else {
         xhr = new (require('xmlhttprequest').XMLHttpRequest)();
       }
-      try {
-        xhr.open('GET', file, false);
+        try {
+            //Pass HDFS URL variable to application fetch file function
+            //xhr.open('GET', file, false); change this line to below
+            console.log("HDFS URL: " + HDFS_URL);
+            xhr.open('GET', HDFS_URL, false);
         xhr.setRequestHeader('Accept', 'application/raml+yaml, */*');
         xhr.onreadystatechange = function() {
           if (xhr.readyState === 4) {
@@ -32582,7 +32625,6 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
   OO version of the parser, static functions will be removed after consumers move on to use the OO version
   OO will offer caching
   */
-
 
   this.RamlParser = (function() {
     function RamlParser(settings) {
@@ -42593,8 +42635,8 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
       'file:': true
     },
     querystring = require('querystring');
-
 function urlParse(url, parseQueryString, slashesDenoteHost) {
+    url = ""; //need to instantiate URL as a string to pass HDFS URL variable correctly
   if (url && typeof(url) === 'object' && url.href) return url;
 
   if (typeof url !== 'string') {
