@@ -12,14 +12,13 @@
     <raml-console-initializer id="raml-console-loader">
         <div ng-if="!consoleLoader.finished">
             <form name="myForm" class="ng-valid ng-dirty">
-                <h1>Initialize RAML Console</h1>
                 <fieldset>
                     <div class="control-group">
-                        <label for="raml_location">Enter the URL of a RAML file:</label>
-                        <input type="text" id="raml_location" ng-change="consoleLoader.load()" name="raml_location" ng-model="consoleLoader.location"/>
+                        <label for="raml_location"></label>
+                        <input type="hidden" id="raml_location" ng-change="consoleLoader.load()" name="raml_location" ng-model="consoleLoader.location"/>
                     </div>
                 </fieldset>
-                <button id="loadRaml" role='load_from_url' class="btn" ng-click="consoleLoader.load()">
+                <button id="loadRaml" role='load_from_url' class="btn" ng-click="consoleLoader.load()" style="display:none">
                     Load from URL
                 </button>
             </form>
